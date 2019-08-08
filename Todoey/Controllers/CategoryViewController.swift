@@ -13,14 +13,12 @@ import ChameleonFramework
 class CategoryViewController: SwipeTableViewController {
     
     let realm = try! Realm()
-    
     var categories: Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         load()
-        
         tableView.separatorStyle = .none
     }
     
@@ -33,11 +31,9 @@ class CategoryViewController: SwipeTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
-        if let colour = categories?[indexPath.row].colour {
-            cell.backgroundColor = UIColor(hexString: colour)
-            cell.textLabel?.textColor = ContrastColorOf(UIColor(hexString: colour)!, returnFlat: true)
-        }
-        
+        guard let colour = categories?[indexPath.row].colour else { fatalError() }
+        cell.backgroundColor = UIColor(hexString: colour)
+        cell.textLabel?.textColor = ContrastColorOf(UIColor(hexString: colour)!, returnFlat: true)
         return cell
     }
     
@@ -57,7 +53,6 @@ class CategoryViewController: SwipeTableViewController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
-        
         let alert = UIAlertController(title: "Add New Category", message: "", preferredStyle: .alert)
         
         alert.addTextField { (alertTextField) in
